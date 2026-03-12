@@ -2,7 +2,9 @@
 
 A native Haiku clone of the classic ball-and-wall puzzle game. Draw lines to divide the playing field while avoiding the bouncing balls — capture 75% of the field to advance to the next level.
 
-![Jezziku running on Haiku](jezz_icon)
+![Haiku OS](https://img.shields.io/badge/platform-Haiku%20OS-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Version](https://img.shields.io/badge/version-1.0.0-orange)
 
 ---
 
