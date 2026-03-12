@@ -1,0 +1,20 @@
+# Compiled binary
+Jezziku
+
+# Object files and intermediate build artifacts
+*.o
+*.rsrc
+
+# Haiku filesystem attribute sidecar files
+*.rattr
+
+# Editor and IDE files
+*.kate-swp
+.kdev4/
+*.kdev4
+nbproject/
+.vscode/
+.idea/
+
+# macOS metadata (if repo is ever touched on macOS)
+.DS_Store

@@ -1,0 +1,4 @@
+resource app_signature "application/x-vnd.haiku.jezziku";
+resource app_flags B_SINGLE_LAUNCH;
+
+resource("BEOS:ICON") #'VICN' import "jezz_icon";
