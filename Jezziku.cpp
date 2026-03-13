@@ -798,8 +798,10 @@ public:
                 B_WILL_DRAW | B_FULL_UPDATE_ON_RESIZE),
           fLinkRect(0, 0, 0, 0), fIcon(nullptr)
     {
+        fVersionStr[0] = '\0';
         SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
         _LoadIcon();
+        _LoadVersion();
     }
 
     ~AboutView() { delete fIcon; }
@@ -808,8 +810,8 @@ public:
     {
         BRect b = Bounds();
 
-        // Coloured header band
-        const float kHdrH = 52.0f;
+        // Coloured header band — tall enough for name + version
+        const float kHdrH = 68.0f;
         BRect hdr(b.left, b.top, b.right, b.top + kHdrH);
         rgb_color tabCol = ui_color(B_WINDOW_TAB_COLOR);
         SetHighColor(tint_color(tabCol, B_DARKEN_1_TINT));
@@ -817,16 +819,31 @@ public:
         SetHighColor(tint_color(tabCol, B_DARKEN_3_TINT));
         StrokeLine(BPoint(b.left, hdr.bottom), BPoint(b.right, hdr.bottom));
 
-        // App name centred in header
         BFont titleFont(*be_bold_font);
         titleFont.SetSize(be_bold_font->Size() + 5);
+        BFont verFont(*be_plain_font);
+
+        // Centre the two-line block (name + version) vertically in the header
+        float totalTextH = titleFont.Size() + 4.0f + verFont.Size();
+        float blockTop   = hdr.top + (kHdrH - totalTextH) * 0.5f;
+
+        // App name
         SetFont(&titleFont);
         SetHighColor(ui_color(B_WINDOW_TEXT_COLOR));
         const char* name = "Jezziku";
         float nw = titleFont.StringWidth(name);
-        DrawString(name,
-                   BPoint(b.left + (b.Width() - nw) * 0.5f,
-                          hdr.top + (kHdrH + titleFont.Size() * 0.72f) * 0.5f));
+        DrawString(name, BPoint(b.left + (b.Width() - nw) * 0.5f,
+                                blockTop + titleFont.Size() * 0.88f));
+
+        // Version string (read from resources via BAppFileInfo)
+        if (fVersionStr[0] != '\0') {
+            SetFont(&verFont);
+            SetHighColor(0, 0, 0);
+            float vw = verFont.StringWidth(fVersionStr);
+            DrawString(fVersionStr,
+                       BPoint(b.left + (b.Width() - vw) * 0.5f,
+                              blockTop + titleFont.Size() + 4.0f + verFont.Size() * 0.88f));
+        }
 
         // Body background
         SetHighColor(ui_color(B_PANEL_BACKGROUND_COLOR));
@@ -914,8 +931,23 @@ private:
         }
     }
 
+    void _LoadVersion()
+    {
+        app_info ai;
+        if (be_app->GetAppInfo(&ai) != B_OK) return;
+
+        BFile appFile(&ai.ref, B_READ_ONLY);
+        BAppFileInfo info(&appFile);
+        version_info vi;
+        if (info.GetVersionInfo(&vi, B_APP_VERSION_KIND) != B_OK) return;
+
+        snprintf(fVersionStr, sizeof(fVersionStr), "v%u.%u.%u",
+                 vi.major, vi.middle, vi.minor);
+    }
+
     mutable BRect  fLinkRect;
     BBitmap*       fIcon;
+    char           fVersionStr[256];
 };
 
 class AboutWindow : public BWindow {

@@ -1,4 +1,16 @@
 resource app_signature "application/x-vnd.haiku.jezziku";
 resource app_flags B_SINGLE_LAUNCH;
 
+resource app_version {
+    major      = 1,
+    middle     = 0,
+    minor      = 0,
+    variety    = B_APPV_FINAL,
+    internal   = 0,
+    short_info = "Ball-and-wall puzzle game",
+    long_info  = "Draw lines to divide the playing field while avoiding "
+                 "bouncing balls. Capture 75% of the field to advance to "
+                 "the next level. Inspired by the classic JezzBall."
+};
+
 resource("BEOS:ICON") #'VICN' import "jezz_icon";
